@@ -1,5 +1,4 @@
-import 'cat-api';
-
+import fetchBreeds from "/src/cat-api.js";
 import axios from 'axios';
 
 axios.defaults.headers.common['x-api-key'] =
@@ -7,10 +6,10 @@ axios.defaults.headers.common['x-api-key'] =
 
 const catList = document.querySelector('.breed-select');
 
-console.log(
-  fetchBreeds()
-    .then(cats => renderCatList(cats))
-    .catch(error => console.log(error))
-);
+
+fetchBreeds()
+  .then(cats => renderCatList(cats))
+  .catch(error => console.log(error));
+
 
 // npm install axios

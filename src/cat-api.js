@@ -6,7 +6,6 @@ function fetchBreeds() {
     return response.json();
   });
 }
-
 function renderCatList(cats) {
   const markup = cats
     .map(cat => {
