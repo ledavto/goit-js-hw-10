@@ -52,13 +52,28 @@ function fetchCatByBreed(id) {
 }
 
 catList.addEventListener('change', () => {
-  fetchCatByBreed('aege')
-    .then(catId => visibleCatInfo(catId))
+  console.log(catList.options[catList.selectedIndex].value);
+  fetchCatByBreed(catList.options[catList.selectedIndex].value)
+    //.then(catId => )
+    .then(catId => {
+    return fetch(`${BASE_URL}breeds`).then(response => {
+    if (!response.ok) {
+      throw new Error(response.status);
+      }
+      console.log(response.json);
+      //const catFind = response.json.find(option => { option.id === catList.options[catList.selectedIndex].value });
+      //response.map
+      //response.url = catId.url;
+      return response.json();
+    })
+    .then(catInfo => visibleCatInfo(catInfo))
+  })
     .catch(error => console.log(error));
+  
 });
 
-function visibleCatInfo(catId) {
-  console.log(catId);
+function visibleCatInfo(catInfo) {
+  console.log(catInfo);
   //const catInfoHtml = `<img src="${catId[0].url}" widgth="${catId[0].width}" height="${catId[0].height}" />`;
   if (document.querySelector('img')) document.querySelector('img').remove();
   const catInfoHtml = `<img src="${catId[0].url}" width="320" />
