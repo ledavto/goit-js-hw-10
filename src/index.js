@@ -1,5 +1,15 @@
 //import fetchBreeds from "/src/cat-api.js";
 import axios from 'axios';
+import SlimSelect from 'slim-select'
+
+new SlimSelect({
+  select: '#selectElement'
+})
+
+const BASE_URL = 'https://api.thecatapi.com/v1/';
+
+const instance = axios.create();
+axios.defaults.baseURL = BASE_URL;
 
 axios.defaults.headers.common['x-api-key'] =
   'live_q0f7O1zpFYCLwEtRAEPlPq41gEIqmJ7E4HqeSMe2H2eQkgmN85txELlTKQq8z24d';
@@ -10,8 +20,8 @@ const elError = document.querySelector('.error');
 const elInfo = document.querySelector('.cat-info');
 
 elError.style.display = 'none';
+//catList.style.display = 'none;'
 
-const BASE_URL = 'https://api.thecatapi.com/v1/';
 
 fetchBreeds()
   .then(cats => renderCatList(cats))
@@ -19,15 +29,26 @@ fetchBreeds()
   .catch(error => console.log(error));
 
 // npm install axios
+// npm install slim-select
 
 function fetchBreeds() {
-  return fetch(`${BASE_URL}breeds`).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
+  return axios.get(`breeds`).then(function (response){
+    // if (!response.ok) {
+    //   throw new Error(response.status);
+    // }
+    //console.log(response.data);
+    return response.data;
   });
 }
+
+// function fetchBreeds() {
+//   return fetch(`${BASE_URL}breeds`).then(response => {
+//     if (!response.ok) {
+//       throw new Error(response.status);
+//     }
+//     return response.json();
+//   });
+// }
 
 function renderCatList(cats) {
   const markup = cats
@@ -40,46 +61,35 @@ function renderCatList(cats) {
   //console.log(markup);
   catList.innerHTML = markup;
   elLoader.style.display = 'none';
+  catList.style.display.remove;
 }
 
 function fetchCatByBreed(id) {
-  return fetch(`${BASE_URL}images/search?breed_ids=${id}`).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
+  return axios.get(`images/search?breed_ids=${id}`).then(function (response){
+
+    console.log(response.data);
+    return response.data;
   });
 }
 
 catList.addEventListener('change', () => {
-  console.log(catList.options[catList.selectedIndex].value);
   fetchCatByBreed(catList.options[catList.selectedIndex].value)
-    //.then(catId => )
-    .then(catId => {
-      return fetch(`${BASE_URL}breeds`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.status);
-          }
-          const catFind = response.find(option => {
-            option.id === catList.options[catList.selectedIndex].value;
-          });
-          //response.url = catId.url;
-          //return response.json();
-          return catFind.json();
-        })
-        .then(catInfo => visibleCatInfo(catInfo));
-    })
-    .catch(error => console.log(error));
+    .then(catInfo =>visibleCatInfo(catInfo)
+    )
+    .catch(function (error) { 
+      elError.textContent = error.response.data;
+    });
 });
 
 function visibleCatInfo(catInfo) {
-  //console.log(info);
-  //const catInfoHtml = `<img src="${catId[0].url}" widgth="${catId[0].width}" height="${catId[0].height}" />`;
-  // if (document.querySelector('img')) document.querySelector('img').remove();
-  // const catInfoHtml = `<img src="${catId[0].url}" width="320" />
-  //                     <div><h1>${
-  //                       catList.options[catList.selectedIndex].textContent
-  //                     }</h1></div>`;
-  // elInfo.innerHTML = catInfoHtml;
+  console.log(catInfo[0].url);
+  console.log(catInfo[0].breeds[0].description);
+  console.log(catInfo[0].breeds[0].temperament);
+  if (document.querySelector('img')) document.querySelector('img').remove();
+  const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
+                      <div><h1>${
+                        catInfo[0].breeds[0].name
+    }</h1></div> <p>${catInfo[0].breeds[0].description}</p> 
+                      <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
+  elInfo.innerHTML = catInfoHtml;
 }
