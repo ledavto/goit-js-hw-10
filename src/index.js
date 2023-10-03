@@ -1,7 +1,9 @@
-import { fetchBreeds, fetchCatByBreed } from '/src/cat-api.js';
+//import { fetchBreeds, fetchCatByBreed } from '/src/cat-api.js';
+import fetchBreeds from '/src/cat-api.js';
 
-//import axios from 'axios';
+import axios from 'axios';
 import SlimSelect from 'slim-select';
+import Notiflix from 'notiflix';
 
 // new SlimSelect({
 //   select: '#selectElement',
@@ -21,42 +23,51 @@ const elLoader = document.querySelector('.loader');
 const elError = document.querySelector('.error');
 const elInfo = document.querySelector('.cat-info');
 
-fetchBreeds(catList, elLoader)
-  .then(cats => renderCatList(cats))
-  //.then(cats => console.log(cats))
-  .catch(error => console.log(error));
+fetchBreeds()
+  .then(cats => {
+    catList.style.display = 'inline';
+    renderCatList(cats);
+  })
+  .catch(error => {
+    elLoader.style.display = 'none';
+    Notiflix.Notify.failure(error);
+  });
 
-function renderCatList(cats) {
-  const markup = cats
-    .map(cat => {
-      return `
-          <option value="${cat.id}">${cat.name}</option>
-        `;
-    })
-    .join('');
-  catList.innerHTML = markup;
-  elLoader.style.display = 'none';
-  catList.style.display.remove;
-}
+// function renderCatList(cats) {
+//   const markup = cats
+//     .map(cat => {
+//       return `
+//           <option value="${cat.id}">${cat.name}</option>
+//         `;
+//     })
+//     .join('');
+//   catList.innerHTML = markup;
+//   elLoader.style.display = 'none';
+//   catList.style.display.remove;
+// }
 
-catList.addEventListener('change', () => {
-  elError.style.display = 'none';
-  elLoader.style.display = 'block';
-  elInfo.style.display = 'none';
-  fetchCatByBreed(
-    catList.options[catList.selectedIndex].value,
-    catList,
-    elLoader
-  ).then(catInfo => visibleCatInfo(catInfo));
-});
+// catList.addEventListener('change', () => {
+//   elError.style.display = 'none';
+//   elLoader.style.display = 'block';
+//   elInfo.style.display = 'none';
+//   fetchCatByBreed(catList.options[catList.selectedIndex].value).then(catInfo =>
+//     visibleCatInfo(catInfo).catch(error => {
+//       elLoader.style.display = 'none';
+//       Notiflix.Notify.failure(error);
+//     })
+//   );
+// });
 
-function visibleCatInfo(catInfo) {
-  if (document.querySelector('img')) document.querySelector('img').remove();
-  const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
-                      <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p> 
-                      <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
-  elInfo.innerHTML = catInfoHtml;
-}
+// function visibleCatInfo(catInfo) {
+//   elInfo.style.display = 'block';
+//   if (document.querySelector('img')) document.querySelector('img').remove();
+//   const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
+//                       <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p>
+//                       <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
+//   elInfo.innerHTML = catInfoHtml;
+// }
+
+////////////////////////////////////////////////////////////////
 
 // // Відправлення запросу на отримання ПОРІД котів
 // function fetchBreeds() {
