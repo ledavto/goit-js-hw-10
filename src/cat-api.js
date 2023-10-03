@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Notiflix from 'notiflix';
 
 const BASE_URL = 'https://api.thecatapi.com/v1/';
 
@@ -33,4 +32,4 @@ function fetchCatByBreed(id) {
     });
 }
 
-export default { fetchBreeds, fetchCatByBreed };
+export { fetchBreeds, fetchCatByBreed };
