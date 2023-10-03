@@ -25,3 +25,8 @@
 .breed-select {
   display: none;
 }
+
+.cat-info {
+  display: flex;
+  flex-direction: row;
+}

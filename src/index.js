@@ -59,12 +59,12 @@ catList.addEventListener('change', () => {
 });
 
 function visibleCatInfo(catInfo) {
-  elInfo.style.display = 'block';
+  elInfo.style.display = 'flex';
   elLoader.style.display = 'none';
   if (document.querySelector('img')) document.querySelector('img').remove();
-  const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
-                      <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p>
-                      <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
+  const catInfoHtml = `<div><img src="${catInfo[0].url}" width="320" /></div>
+                      <div><h1>${catInfo[0].breeds[0].name}</h1> <p>${catInfo[0].breeds[0].description}</p>
+                      <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p></div>`;
   elInfo.innerHTML = catInfoHtml;
 }
 
