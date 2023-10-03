@@ -1,17 +1,17 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
 //import axios from 'axios';
-//import SlimSelect from 'slim-select';
+import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 
-// new SlimSelect({
-//   select: '#selectElement',
-//   events: {
-//     afterChange: newVal => {
-//       console.log(newVal);
-//     },
-//   },
-// });
+new SlimSelect({
+  select: '#breed-select',
+  // events: {
+  //   afterChange: newVal => {
+  //     console.log(newVal);
+  //   },
+  //},
+});
 
 // npm install axios
 // npm install slim-select
@@ -32,39 +32,41 @@ fetchBreeds()
     Notiflix.Notify.failure(error);
   });
 
-// function renderCatList(cats) {
-//   const markup = cats
-//     .map(cat => {
-//       return `
-//           <option value="${cat.id}">${cat.name}</option>
-//         `;
-//     })
-//     .join('');
-//   catList.innerHTML = markup;
-//   elLoader.style.display = 'none';
-//   catList.style.display.remove;
-// }
+function renderCatList(cats) {
+  const markup = cats
+    .map(cat => {
+      return `
+          <option value="${cat.id}">${cat.name}</option>
+        `;
+    })
+    .join('');
+  catList.innerHTML = markup;
+  elLoader.style.display = 'none';
+  catList.style.display.remove;
+}
 
-// catList.addEventListener('change', () => {
-//   elError.style.display = 'none';
-//   elLoader.style.display = 'block';
-//   elInfo.style.display = 'none';
-//   fetchCatByBreed(catList.options[catList.selectedIndex].value).then(catInfo =>
-//     visibleCatInfo(catInfo).catch(error => {
-//       elLoader.style.display = 'none';
-//       Notiflix.Notify.failure(error);
-//     })
-//   );
-// });
+catList.addEventListener('change', () => {
+   elLoader.style.display = 'block';
+  elInfo.style.display = 'none';
+  fetchCatByBreed(catList.options[catList.selectedIndex].value)
+    .then(catInfo =>
+      visibleCatInfo(catInfo))
+        .catch(error => {
+      elLoader.style.display = 'none';
+      Notiflix.Notify.failure(error);
+    })
+  
+});
 
-// function visibleCatInfo(catInfo) {
-//   elInfo.style.display = 'block';
-//   if (document.querySelector('img')) document.querySelector('img').remove();
-//   const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
-//                       <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p>
-//                       <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
-//   elInfo.innerHTML = catInfoHtml;
-// }
+function visibleCatInfo(catInfo) {
+  elInfo.style.display = 'block';
+  elLoader.style.display = 'none';
+  if (document.querySelector('img')) document.querySelector('img').remove();
+  const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
+                      <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p>
+                      <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
+  elInfo.innerHTML = catInfoHtml;
+}
 
 ////////////////////////////////////////////////////////////////
 
