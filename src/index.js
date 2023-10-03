@@ -1,5 +1,4 @@
-import { fetchBreeds, fetchCatByBreed } from '/src/cat-api.js';
-import fetchBreeds from '/src/cat-api.js';
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
 //import axios from 'axios';
 //import SlimSelect from 'slim-select';
