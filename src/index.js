@@ -1,10 +1,15 @@
 //import fetchBreeds from "/src/cat-api.js";
 import axios from 'axios';
-import SlimSelect from 'slim-select'
+import SlimSelect from 'slim-select';
+import Notiflix from 'notiflix';
 
-new SlimSelect({
-  select: '#selectElement'
-})
+// new SlimSelect({
+//   select: '#selectElement',
+// });
+
+// npm install axios
+// npm install slim-select
+// npm i notiflix
 
 const BASE_URL = 'https://api.thecatapi.com/v1/';
 
@@ -19,26 +24,32 @@ const elLoader = document.querySelector('.loader');
 const elError = document.querySelector('.error');
 const elInfo = document.querySelector('.cat-info');
 
-elError.style.display = 'none';
+//elError.style.display = 'none';
 //catList.style.display = 'none;'
-
 
 fetchBreeds()
   .then(cats => renderCatList(cats))
   //.then(cats => console.log(cats))
   .catch(error => console.log(error));
 
-// npm install axios
-// npm install slim-select
-
 function fetchBreeds() {
-  return axios.get(`breeds`).then(function (response){
-    // if (!response.ok) {
-    //   throw new Error(response.status);
-    // }
-    //console.log(response.data);
-    return response.data;
-  });
+  return axios
+    .get(`breeds`)
+    .then(function (response) {
+      // if (!response.ok) {
+      //   throw new Error(response.status);
+      // }
+      //console.log(response.data);
+      catList.style.display = 'inline';
+      return response.data;
+    })
+    .catch(function (error) {
+      elLoader.style.display = 'none';
+      //elError.style.display = 'inline';
+      Notiflix.Notify.failure(
+        'Oops! Something went wrong! Try reloading the page!'
+      );
+    });
 }
 
 // function fetchBreeds() {
@@ -65,31 +76,39 @@ function renderCatList(cats) {
 }
 
 function fetchCatByBreed(id) {
-  return axios.get(`images/search?breed_ids=${id}`).then(function (response){
-
-    console.log(response.data);
-    return response.data;
-  });
+  return axios
+    .get(`images/search?breed_ids=${id}`)
+    .then(function (response) {
+      //console.log(response.data);
+      elInfo.style.display = 'inner';
+      return response.data;
+    })
+    .catch(function (error) {
+      //elError.textContent = error.response.data;
+      elLoader.style.display = 'none';
+      //elError.style.display = 'inline';
+      Notiflix.Notify.failure(
+        'Oops! Something went wrong! Try reloading the page!'
+      );
+    });
 }
 
 catList.addEventListener('change', () => {
-  fetchCatByBreed(catList.options[catList.selectedIndex].value)
-    .then(catInfo =>visibleCatInfo(catInfo)
-    )
-    .catch(function (error) { 
-      elError.textContent = error.response.data;
-    });
+  elError.style.display = 'none';
+  elLoader.style.display = 'inner';
+  elInfo.style.display = 'none';
+  fetchCatByBreed(catList.options[catList.selectedIndex].value).then(catInfo =>
+    visibleCatInfo(catInfo)
+  );
 });
 
 function visibleCatInfo(catInfo) {
-  console.log(catInfo[0].url);
-  console.log(catInfo[0].breeds[0].description);
-  console.log(catInfo[0].breeds[0].temperament);
+  // console.log(catInfo[0].url);
+  // console.log(catInfo[0].breeds[0].description);
+  // console.log(catInfo[0].breeds[0].temperament);
   if (document.querySelector('img')) document.querySelector('img').remove();
   const catInfoHtml = `<img src="${catInfo[0].url}" width="320" />
-                      <div><h1>${
-                        catInfo[0].breeds[0].name
-    }</h1></div> <p>${catInfo[0].breeds[0].description}</p> 
+                      <div><h1>${catInfo[0].breeds[0].name}</h1></div> <p>${catInfo[0].breeds[0].description}</p> 
                       <p><b>Temperament: </b>${catInfo[0].breeds[0].temperament}</p>`;
   elInfo.innerHTML = catInfoHtml;
 }

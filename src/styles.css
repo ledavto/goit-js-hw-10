@@ -17,3 +17,11 @@
     transform: rotate(360deg);
   }
 }
+
+.error {
+  display: none;
+}
+
+.breed-select {
+  display: none;
+}
