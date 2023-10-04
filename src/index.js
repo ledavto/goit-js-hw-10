@@ -29,6 +29,7 @@ fetchBreeds()
   })
   .catch(error => {
     elLoader.style.display = 'none';
+    elInfo.style.display = 'none';
     Notiflix.Notify.failure(error);
   });
 
@@ -46,16 +47,15 @@ function renderCatList(cats) {
 }
 
 catList.addEventListener('change', () => {
-   elLoader.style.display = 'block';
+  elLoader.style.display = 'block';
   elInfo.style.display = 'none';
   fetchCatByBreed(catList.options[catList.selectedIndex].value)
-    .then(catInfo =>
-      visibleCatInfo(catInfo))
-        .catch(error => {
+    .then(catInfo => visibleCatInfo(catInfo))
+    .catch(error => {
       elLoader.style.display = 'none';
+      elInfo.style.display = 'none';
       Notiflix.Notify.failure(error);
-    })
-  
+    });
 });
 
 function visibleCatInfo(catInfo) {
